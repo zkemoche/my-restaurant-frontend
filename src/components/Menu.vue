@@ -59,7 +59,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col class="md-6"> <div class=" text-subtitle-1">Amount</div> </v-col>
-                                <v-col class="md-4"> <div class=" text-subtitle-1 text-right">{{ order.menu_price }}</div> </v-col>
+                                <v-col class="md-4"> <div class=" text-subtitle-1 text-right">{{ order.order_total }}</div> </v-col>
                             </v-row>
                         </v-card-text>
                     </v-col>
@@ -81,25 +81,27 @@
     const menu = ref([] )
     
     const order = ref({
+        menu_id: null,
         menu_item: null,
-        menu_price: null,
-        user: 4,
-        order_type: 'Delivery',
+        order_quantity:1, //change form to use input field
+        order_total: null,
+        user_id: 3,
+        order_type: 'Delivery', //change form to use input field
         order_status:'Preparing'
 
     })
    
     async function fetchMenu() {
-        const menuResponse = await axios.get('http://0.0.0.0/api/menu')
+        const menuResponse = await axios.get('http://127.0.0.1:8000/api/menus')
         // console.log(menuResponse.data)
         menu.value = menuResponse.data
     }
 
-    // to do
     // add order
     function show_order(menu){
+        order.value.menu_id = menu.id
         order.value.menu_item = menu.name
-        order.value.menu_price = menu.price
+        order.value.order_total = menu.price
         
         order_dialog.value = true
         // console.log(menu)
@@ -107,9 +109,11 @@
     //new order = create a dialog form: user (4), Order type dropdown = Delivery, order status = preparing order total = menu price
     function make_order(){
         console.log(order.value)
-
         //Send to backend
-    }
+        axios
+            .post('http://127.0.0.1:8000/api/orders', order.value)
+            .then((response) => console.log(response))
+        }
 
     onMounted(async () => {
         await fetchMenu()

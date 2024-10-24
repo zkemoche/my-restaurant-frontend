@@ -108,15 +108,21 @@
     const order = ref([] )
    
     async function fetchOrder() {
-        const orderResponse = await axios.get('http://0.0.0.0/api/getOrderDetails/1')
+        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/1')
         // console.log(orderResponse.data)
         order.value = orderResponse.data
     }
 
     //To Do
     //Complete payment
-    //List other orders
+    function complete_order(){
+        //send to payments controller
+    }
 
+    //List other orders
+    function fetch_all_orders(){
+        
+    }
     onMounted(async () => {
         await fetchOrder()
     })

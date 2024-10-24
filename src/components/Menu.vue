@@ -1,9 +1,9 @@
 <template>
-    <h1>Menu</h1>
+    <h1 align="center">Menu</h1>
 
     <div>
         <v-row>
-        <v-col cols="12" md="4"  v-for="menu_item in menu" :key=menu>     
+        <v-col cols="12" md="4"  v-for="menu_item in menu" :key=menu_item>     
             <!-- <v-col>      -->
             <v-card class="mx-auto my-12" max-width="450" >
                 <!-- <v-img height="250" :src="product.productImagePath" cover ></v-img> -->
@@ -35,10 +35,13 @@
     const menu = ref([] )
    
     async function fetchMenu() {
-        const menuResponse = await axios.get('http://127.0.0.1:8000/api/menus')
+        const menuResponse = await axios.get('http://0.0.0.0/api/menu')
         console.log(menuResponse.data)
         menu.value = menuResponse.data
     }
+
+    // to do
+    // add order
     onMounted(async () => {
         await fetchMenu()
     })

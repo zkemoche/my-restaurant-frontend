@@ -1,6 +1,6 @@
 <template>
     <h1 align="center">Menu</h1>
-
+<!-- menu list -->
     <div>
         <v-row>
         <v-col cols="12" md="4"  v-for="menu_item in menu" :key=menu_item>     
@@ -20,28 +20,97 @@
 
                 <v-divider class="mx-4 mb-1"></v-divider>
                 <v-card-actions>
-                    <v-btn color="deep-purple-lighten-2" text="Order" block border></v-btn>
+                    <v-btn color="deep-purple-lighten-2" text="Order" block border @click="show_order(menu_item)"></v-btn>>
                 </v-card-actions>
             </v-card>
         </v-col>
         </v-row>
     </div>
+<!-- new order -->
+<v-dialog v-model="order_dialog" width="auto">
+        <v-card  width="700">
+            <v-card-item>
+                <v-card-title class="text-center">Review for your order <v-btn @click="order_dialog = false" >X</v-btn></v-card-title>
+            </v-card-item>
+            <v-card-text>
+                <v-row>
+                    <v-col>                    
+                        <v-card-text>
+                            <v-row>
+                                <v-col class="md-6"> <div class="my-4 text-subtitle-1">Menu item</div> </v-col>
+                                <v-col class="md-4"> <div class="my-4 text-subtitle-1 text-right">{{ order.menu_item }}</div> </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>                    
+                        <v-card-text>
+                            <v-row>
+                                <v-col class="md-6"> <div class="my-4 text-subtitle-1">Order Type</div> </v-col>
+                                <v-col class="md-4"> <div class="my-4 text-subtitle-1 text-right">delivery</div> </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-col>
+                </v-row>
+               
+                <v-row>
+                    <v-col>                    
+                        <v-card-text>
+                            <v-row>
+                                <v-col class="md-6"> <div class=" text-subtitle-1">Amount</div> </v-col>
+                                <v-col class="md-4"> <div class=" text-subtitle-1 text-right">{{ order.menu_price }}</div> </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-col>
+                </v-row>
+            </v-card-text>
 
+            <v-divider class="mx-4 mb-1"></v-divider>
+            <v-card-actions>
+                <v-btn color="deep-purple-lighten-2" text="Make Order" block border @click="make_order()" ></v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 <script setup>
     import { ref, onMounted } from 'vue'
     import axios from 'axios'
     
+    const order_dialog = ref(false)
     const menu = ref([] )
+    
+    const order = ref({
+        menu_item: null,
+        menu_price: null,
+        user: 4,
+        order_type: 'Delivery',
+        order_status:'Preparing'
+
+    })
    
     async function fetchMenu() {
         const menuResponse = await axios.get('http://0.0.0.0/api/menu')
-        console.log(menuResponse.data)
+        // console.log(menuResponse.data)
         menu.value = menuResponse.data
     }
 
     // to do
     // add order
+    function show_order(menu){
+        order.value.menu_item = menu.name
+        order.value.menu_price = menu.price
+        
+        order_dialog.value = true
+        // console.log(menu)
+    }
+    //new order = create a dialog form: user (4), Order type dropdown = Delivery, order status = preparing order total = menu price
+    function make_order(){
+        console.log(order.value)
+
+        //Send to backend
+    }
+
     onMounted(async () => {
         await fetchMenu()
     })

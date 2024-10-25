@@ -116,7 +116,7 @@
     })
    
     async function fetchOrder() {
-        const orderResponse = await axios.get('http://0.0.0.0/api/getOrderDetails/1')
+        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/1')
         // console.log(orderResponse.data)
         order.value = orderResponse.data
     }
@@ -133,13 +133,13 @@
     function complete_order(){
         // console.log(payment.value)
         axios
-            .post('http://0.0.0.0/api/payments', payment.value)
+            .post('http://127.0.0.1:8000/api/payments', payment.value)
             .then((response) => console.log(response))
     }
 
     //List other orders
     function fetch_all_orders(){
-        
+
     }
     onMounted(async () => {
         await fetchOrder()

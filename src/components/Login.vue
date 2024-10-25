@@ -5,7 +5,7 @@
       <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg" >
         <div class="text-subtitle-1 text-medium-emphasis">Account</div>
   
-        <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline" variant="outlined" ></v-text-field>
+        <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline" variant="outlined"  v-model="login_info.email"></v-text-field>
   
         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
           Password
@@ -20,9 +20,10 @@
           prepend-inner-icon="mdi-lock-outline"
           variant="outlined"
           @click:append-inner="visible = !visible"
+          v-model="login_info.password"
         ></v-text-field>
   
-        <v-btn class="mb-8" color="blue" size="large" variant="tonal" block  to="/home"> Log In </v-btn>
+        <v-btn class="mb-8" color="warning" size="large" variant="tonal" block  @click="login()" > Log In </v-btn>
   
         <v-card-text class="text-center">
           <a class="text-blue text-decoration-none" href="/register" rel="noopener noreferrer" >
@@ -34,7 +35,22 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import axios from 'axios'
 
 const visible = ref(false)
+const login_info = ref({
+  email:null,
+  password: null
+})
+
+function login(){
+  axios
+    .post('http://127.0.0.1:8000/api/login', login_info.value)
+    .then((response) => {
+    //redirect to home
+      console.log(response),
+      window.location.href = 'home'
+})
+}
 
 </script>

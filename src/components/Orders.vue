@@ -103,21 +103,24 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import axios from 'axios'
+    import { userAuthStore } from "@/stores/auth";
+
     
     const pay_dialog = ref(false)
     const order = ref([])
+    const userStore = userAuthStore();
+    const user = userStore.user
     const payment = ref({
         order_id  : null, 
         payment_type : 'Mpesa', //To Do: use drop down to select options
         amount : null, 
-        user_id : 4, //To Do: get user after login
+        user_id : user.id, //get logged in user's id
         payment_status : "paid"
 
     })
    
     async function fetchOrder() {
         const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/1')
-        // console.log(orderResponse.data)
         order.value = orderResponse.data
     }
 
@@ -131,10 +134,10 @@
     }
     //Complete payment
     function complete_order(){
-        // console.log(payment.value)
-        axios
-            .post('http://127.0.0.1:8000/api/payments', payment.value)
-            .then((response) => console.log(response))
+        console.log(payment.value)
+        // axios
+        //     .post('http://127.0.0.1:8000/api/payments', payment.value)
+        //     .then((response) => console.log(response))
     }
 
     //List other orders

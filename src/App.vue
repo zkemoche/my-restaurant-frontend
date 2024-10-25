@@ -5,7 +5,7 @@ import Navbar from './components/Navbar.vue'
 
 <template>
   <v-app>
-    <Navbar/>
+    <Navbar v-if="!['login', 'register'].includes($route.name)"/>
     <v-main>
       <router-view></router-view>
     </v-main>

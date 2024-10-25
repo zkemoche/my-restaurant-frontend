@@ -92,7 +92,7 @@
     })
    
     async function fetchMenu() {
-        const menuResponse = await axios.get('http://127.0.0.1:8000/api/menus')
+        const menuResponse = await axios.get('http://0.0.0.0/api/menus')
         // console.log(menuResponse.data)
         menu.value = menuResponse.data
     }
@@ -108,10 +108,10 @@
     }
     //new order = create a dialog form: user (4), Order type dropdown = Delivery, order status = preparing order total = menu price
     function make_order(){
-        console.log(order.value)
+        // console.log(order.value)
         //Send to backend
         axios
-            .post('http://127.0.0.1:8000/api/orders', order.value)
+            .post('http://0.0.0.0/api/orders', order.value)
             .then((response) => console.log(response))
         }
 

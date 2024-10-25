@@ -2,7 +2,7 @@
     <h1 align="center">Orders</h1>
     <!-- Order Details -->
     <div>
-        <v-card class="mx-auto my-12" max-width="700" >
+        <v-card class="mx-auto my-12" max-width="600" >
             <v-card-item>
                     <v-card-title class="text-center">Current Order</v-card-title>
                 </v-card-item>
@@ -28,7 +28,7 @@
 
                 <v-divider class="mx-4 mb-1"></v-divider>
                 <v-card-actions>
-                    <v-btn color="deep-purple-lighten-2" text="Pay" block border @click="pay_dialog = true"></v-btn>
+                    <v-btn color="deep-purple-lighten-2" text="Pay" block border @click="show_payment(order)"></v-btn>
                 </v-card-actions>
 
         </v-card>
@@ -95,7 +95,7 @@
 
             <v-divider class="mx-4 mb-1"></v-divider>
             <v-card-actions>
-                <v-btn color="deep-purple-lighten-2" text="Complete Payment" block border></v-btn>
+                <v-btn color="deep-purple-lighten-2" text="Complete Payment" block border @click="complete_order()"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -105,18 +105,36 @@
     import axios from 'axios'
     
     const pay_dialog = ref(false)
-    const order = ref([] )
+    const order = ref([])
+    const payment = ref({
+        order_id  : null, 
+        payment_type : 'Mpesa', //To Do: use drop down to select options
+        amount : null, 
+        user_id : 4, //To Do: get user after login
+        payment_status : "paid"
+
+    })
    
     async function fetchOrder() {
-        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/1')
+        const orderResponse = await axios.get('http://0.0.0.0/api/getOrderDetails/1')
         // console.log(orderResponse.data)
         order.value = orderResponse.data
     }
 
-    //To Do
+    //pass order info to pay dialog
+    function show_payment(order){
+        payment.value.order_id = order.id
+        payment.value.amount = order.order_total
+        
+        pay_dialog.value = true
+        // console.log(order)
+    }
     //Complete payment
     function complete_order(){
-        //send to payments controller
+        // console.log(payment.value)
+        axios
+            .post('http://0.0.0.0/api/payments', payment.value)
+            .then((response) => console.log(response))
     }
 
     //List other orders

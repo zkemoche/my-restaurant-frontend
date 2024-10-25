@@ -95,7 +95,7 @@
 
             <v-divider class="mx-4 mb-1"></v-divider>
             <v-card-actions>
-                <v-btn color="deep-purple-lighten-2" text="Complete Payment" block border @click="complete_order()"></v-btn>
+                <v-btn color="deep-purple-lighten-2" to= "/home" text="Complete Payment" block border @click="complete_order()"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -110,13 +110,13 @@
         order_id  : null, 
         payment_type : 'Mpesa', //To Do: use drop down to select options
         amount : null, 
-        user_id : 4, //To Do: get user after login
+        user_id : 1, //To Do: get user after login
         payment_status : "paid"
 
     })
    
     async function fetchOrder() {
-        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/1')
+        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderdetails/1')
         // console.log(orderResponse.data)
         order.value = orderResponse.data
     }
@@ -133,7 +133,7 @@
     function complete_order(){
         // console.log(payment.value)
         axios
-            .post('http://127.0.0.1:8000/api/payments', payment.value)
+            .post('http://127.0.0.1:8000/api/payment', payment.value)
             .then((response) => console.log(response))
     }
 

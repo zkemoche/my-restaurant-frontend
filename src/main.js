@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
+import piniaPluginPersistedState from "pinia-plugin-persistedstate"
 
 // Vuetify
 import 'vuetify/styles'
@@ -25,6 +26,7 @@ const vuetify = createVuetify({
 })
 //pinia
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedState)
 
 const app = createApp(App)
 app.use(pinia)

@@ -43,8 +43,8 @@ const userStore = userAuthStore(); //store user log in data
 const visible = ref(false)
 const message = ref(null)
 const login_info = ref({
-  email:null,
-  password: null
+  email:"",
+  password: ""
 })
 
 function login(){

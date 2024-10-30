@@ -1,5 +1,6 @@
 <template>
     <h1 align="center">Menu</h1>
+    <v-btn color="deep-purple-lighten-2" text="My Order" block border @click="order_dialog = true"></v-btn>
 <!-- menu list -->
     <div>
         <v-row>
@@ -20,8 +21,15 @@
 
                 <v-divider class="mx-4 mb-1"></v-divider>
                 <v-card-actions>
-                    <v-btn color="deep-purple-lighten-2" text="Order" block border @click="show_order(menu_item)"></v-btn>>
+                    <v-snackbar :timeout="2000" color="blue-grey" rounded="pill" >
+                        <template v-slot:activator="{ props }">
+                            <v-btn color="deep-purple-lighten-2" text="Order" block border @click="current_order.add(menu_item)"></v-btn>
+                        </template>
+                        Added to order.
+                </v-snackbar>
                 </v-card-actions>
+                
+
             </v-card>
         </v-col>
         </v-row>
@@ -30,15 +38,20 @@
 <v-dialog v-model="order_dialog" width="auto">
         <v-card  width="700">
             <v-card-item>
-                <v-card-title class="text-center">Review for your order <v-btn @click="order_dialog = false" >X</v-btn></v-card-title>
+                <v-card-title class="text-center">Review your order <v-btn @click="order_dialog = false" >X</v-btn></v-card-title>
             </v-card-item>
             <v-card-text>
                 <v-row>
                     <v-col>                    
+                        <v-card-text class="my-4 text-subtitle-1">Order Items</v-card-text>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" md="4"  v-for="order_item in current_order.current_order" :key=order_item>                    
                         <v-card-text>
                             <v-row>
-                                <v-col class="md-6"> <div class="my-4 text-subtitle-1">Menu item</div> </v-col>
-                                <v-col class="md-4"> <div class="my-4 text-subtitle-1 text-right">{{ order.menu_item }}</div> </v-col>
+                                <v-col class="md-6"> <div class="my-4 text-subtitle-1">{{order_item.name}}</div> </v-col>
+                                <v-col class="md-4"> <div class="my-4 text-subtitle-1 text-right">{{order_item.price}}</div> </v-col>
                             </v-row>
                         </v-card-text>
                     </v-col>
@@ -48,7 +61,15 @@
                         <v-card-text>
                             <v-row>
                                 <v-col class="md-6"> <div class="my-4 text-subtitle-1">Order Type</div> </v-col>
-                                <v-col class="md-4"> <div class="my-4 text-subtitle-1 text-right">delivery</div> </v-col>
+                                <v-col class="md-4"> 
+                                    <div class="my-4 text-subtitle-1 text-right">
+                                        <v-select
+                                            label="Select"
+                                            :items="['Take Away', 'Dine in']"
+                                            v-model="order.order_type"
+                                        ></v-select>
+                                    </div> 
+                                </v-col>
                             </v-row>
                         </v-card-text>
                     </v-col>
@@ -76,44 +97,34 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import axios from 'axios'
+    import { orderStore } from "@/stores/order";
+    import { userAuthStore } from "@/stores/auth";
+   
+    const current_order = orderStore();
+    const userStore = userAuthStore();
+    const user = userStore.user
     
     const order_dialog = ref(false)
     const menu = ref([] )
-    
     const order = ref({
-        menu_id: null,
-        menu_item: null,
-        order_quantity:1, //change form to use input field
-        order_total: null,
-        user_id: 3,
-        order_type: 'Delivery', //change form to use input field
-        order_status:'Preparing'
-
+        order_details: current_order.current_order,
+        order_total: current_order.current_order_total,
+        user_id: user.id, //gets the user who's logged in
+        order_type: null, //change form to use input field
     })
    
     async function fetchMenu() {
         const menuResponse = await axios.get('http://127.0.0.1:8000/api/menus')
-        // console.log(menuResponse.data)
         menu.value = menuResponse.data
     }
 
-    // add order
-    function show_order(menu){
-        order.value.menu_id = menu.id
-        order.value.menu_item = menu.name
-        order.value.order_total = menu.price
-        
-        order_dialog.value = true
-        // console.log(menu)
-    }
-    //new order = create a dialog form: user (4), Order type dropdown = Delivery, order status = preparing order total = menu price
     function make_order(){
-        // console.log(order.value)
         //Send to backend
         axios
             .post('http://127.0.0.1:8000/api/orders', order.value)
             .then((response) => console.log(response))
-        }
+        order_dialog.value = false
+    }
 
     onMounted(async () => {
         await fetchMenu()

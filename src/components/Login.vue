@@ -36,8 +36,12 @@
 <script setup>
 import { ref } from "vue";
 import axios from 'axios'
+import router from "@/router";
+import { userAuthStore } from "@/stores/auth";
 
+const userStore 		= userAuthStore(); //store user log in data
 const visible = ref(false)
+const message = ref(null)
 const login_info = ref({
   email:null,
   password: null
@@ -47,10 +51,14 @@ function login(){
   axios
     .post('http://127.0.0.1:8000/api/login', login_info.value)
     .then((response) => {
-    //redirect to home
-      console.log(response),
-      window.location.href = 'home'
-})
+      //store token to be used through out the application
+      userStore.login(response.data)
+
+      //redirect to home
+      router.push({ name:   "home" })
+    }).catch(error => {
+      message.value = error.response.data.message
+    })
 }
 
 </script>

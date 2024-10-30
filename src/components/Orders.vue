@@ -62,7 +62,15 @@
                         <v-card-text>
                             <v-row>
                                 <v-col class="md-6"> <div class="my-4 text-subtitle-1">Pay Via</div> </v-col>
-                                <v-col class="md-4"> <div class="my-4 text-subtitle-1 text-right">Mpesa</div> </v-col>
+                                <v-col class="md-4"> 
+                                    <div class="my-4 text-subtitle-1 text-right">
+                                        <v-select
+                                            label="Select"
+                                            :items="['Cash', 'Mpesa','Card']"
+                                            v-model="payment.payment_type"
+                                        ></v-select>
+                                    </div> 
+                                </v-col>
                             </v-row>
                         </v-card-text>
                     </v-col>
@@ -81,7 +89,7 @@
                     <v-col>                    
                         <v-card-text>
                             <v-row>
-                                <v-col class="md-6"> <div class=" text-subtitle-1">Amount</div> </v-col>
+                                <v-col class="md-6"> <div class=" text-subtitle-1">Amount</div> </v-col>                                
                                 <v-col class="md-4"> <div class=" text-subtitle-1 text-right">{{payment.order_total}}</div> </v-col>
                             </v-row>
                         </v-card-text>
@@ -114,7 +122,7 @@
         order_id  : null,
         user: null,
         order_details: null,
-        payment_type : 'Mpesa', //To Do: use drop down to select options
+        payment_type : null, //change form to use input field
         amount : null, 
         user_id : user.id, //get logged in user's id
         payment_status : "Paid"

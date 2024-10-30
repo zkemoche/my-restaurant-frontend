@@ -121,7 +121,7 @@
     })
    
     async function fetchOrder() {
-        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/3')
+        const orderResponse = await axios.get('http://127.0.0.1:8000/api/getOrderDetails/1')
         orders.value = orderResponse.data
     }
 

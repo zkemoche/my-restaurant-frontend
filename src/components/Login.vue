@@ -39,7 +39,7 @@ import axios from 'axios'
 import router from "@/router";
 import { userAuthStore } from "@/stores/auth";
 
-const userStore 		= userAuthStore(); //store user log in data
+const userStore = userAuthStore(); //store user log in data
 const visible = ref(false)
 const message = ref(null)
 const login_info = ref({
@@ -50,6 +50,7 @@ const login_info = ref({
 function login(){
   axios
     .post('http://127.0.0.1:8000/api/login', login_info.value)
+    
     .then((response) => {
       //store token to be used through out the application
       userStore.login(response.data)

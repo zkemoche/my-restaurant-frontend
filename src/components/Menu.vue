@@ -23,7 +23,7 @@
                 <v-card-actions>
                     <v-snackbar :timeout="2000" color="blue-grey" rounded="pill" >
                         <template v-slot:activator="{ props }">
-                            <v-btn color="deep-purple-lighten-2" text="Order" block border @click="current_order.add(menu_item)"></v-btn>
+                            <v-btn color="deep-purple-lighten-2" to= "/orders"text="Order" block border @click="current_order.add(menu_item)"></v-btn>
                         </template>
                         Added to order.
                 </v-snackbar>
